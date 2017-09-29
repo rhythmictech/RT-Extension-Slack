@@ -1,11 +1,10 @@
 use strict;
 use warnings;
-use HTTP::Request::Common qw(POST); 
-use LWP::UserAgent; 
-use JSON; 
+use REST::Client;
+use JSON;
 package RT::Extension::Slack;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 NAME
 
@@ -13,11 +12,11 @@ RT-Extension-Slack - Integration with Slack webhooks
 
 =head1 DESCRIPTION
 
-This module is designed for *Request Tracker 4* integrating with *Slack* webhooks. It was modified from Maciek's original code which was posted on RT's mailing list. His original code is [found here](http://www.gossamer-threads.com/lists/rt/users/128413#128413)
+This module is designed for *Request Tracker 4* integrating with *Slack* webhooks.
 
 =head1 RT VERSION
 
-Works with RT 4.2.0
+Works with RT 4.2.0+
 
 =head1 INSTALLATION
 
@@ -92,41 +91,38 @@ SOFTWARE.
 
 
 =cut
-sub Notify { 
-	my %args = @_; 
-	my $payload = { 
-		username => 'Mr. RT', 
-		channel	=>	'#request-tracker',
-		icon_emoji => ':ghost:', 
-		text => 'I have forgotten to say something', 
-	}; 
-	my $service_webhook; 
+sub Notify {
+	my %args = @_;
+	my $payload = {};
 
-
-	foreach (keys %args) { 
-		$payload->{$_} = $args{$_}; 
-	} 
-	if (!$payload->{text}) { 
-		return; 
-	} 
-	my $payload_json = JSON::encode_json($payload); 
-
-	$service_webhook = RT->Config->Get('SlackWebhookURL'); 
-	if (!$service_webhook) { 
-		return; 
-	} 
-
-	my $ua = LWP::UserAgent->new(); 
-	$ua->timeout(10); 
-
-	$RT::Logger->info('Pushing notification to Slack: '. $payload_json); 
-	my $response = $ua->post($service_webhook,[ 'payload' => $payload_json ]);
-	if ($response->is_success) { 
+  my $service_webhook = RT->Config->Get('SlackWebhookURL');
+	if (!$service_webhook) {
 		return;
-	} else { 
-		$RT::Logger->error('Failed to push notification to Slack ('. 
-		$response->code .': '. $response->message .')'); 
-	} 
-} 
+	}
 
-1; 
+  foreach (keys %args) {
+		$payload->{$_} = $args{$_};
+	}
+
+	if (!$payload->{text}) {
+		return;
+	}
+
+	my $payload_json = JSON::encode_json($payload);
+  my $payload_headers = { 'Content-type' => 'application/json' };
+
+  my $client = REST::Client->new();
+
+	$RT::Logger->info('Pushing notification to Slack: '. $payload_json);
+
+  $client->POST($service_webhook, $payload_json, $payload_headers);
+
+	if ($client->responseCode() == '200') {
+		return;
+	} else {
+		$RT::Logger->error('Failed to push notification to Slack ('.
+		$client->responseCode() .': '. $client->responseContent .')');
+	}
+}
+
+1;

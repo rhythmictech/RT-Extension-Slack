@@ -1,4 +1,7 @@
 Revision history for RT-Extension-Slack
 
+0.02 [Release Date]
+ - Move to REST::Client and more flexible config
+ 
 0.01 [Release Date]
  - Initial version

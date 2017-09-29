@@ -1,7 +1,7 @@
 ---
 abstract: 'RT-Extension-Slack Extension'
 author:
-  - 'Andrew Wippler <andrew.wippler@gmail.com>'
+  - 'Steven Dickenson <sdickenson@gmail.com>'
 build_requires:
   ExtUtils::MakeMaker: '6.59'
 configure_requires:
@@ -19,4 +19,4 @@ no_index:
     - inc
 requires:
   perl: '5.008003'
-version: '0.01'
+version: '0.02'

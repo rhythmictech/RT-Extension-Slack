@@ -1,7 +1,7 @@
 {
    "abstract" : "RT-Extension-Slack Extension",
    "author" : [
-      "Andrew Wippler <andrew.wippler@gmail.com>"
+      "Steven Dickenson <sdickenson@gmail.com>"
    ],
    "dynamic_config" : 0,
    "generated_by" : "ExtUtils::MakeMaker version 6.98, CPAN::Meta::Converter version 2.142690",
@@ -37,5 +37,5 @@
       }
    },
    "release_status" : "stable",
-   "version" : "0.01"
+   "version" : "0.02"
 }
