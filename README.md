@@ -65,7 +65,8 @@ RT::Extension::Slack::Notify(text => $text, channel => "support-team", username 
 
 # AUTHORS
 [Maciek] (http://www.gossamer-threads.com/lists/rt/users/128413#128413)  
-Andrew Wippler 
+Andrew Wippler
+Steven Dickenson (https://github.com/rhythmictech/RT-Extension-Slack)
     
 
 # LICENSE AND COPYRIGHT
